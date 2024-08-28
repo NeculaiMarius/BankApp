@@ -5,8 +5,9 @@ import React from 'react'
 import { ITEMS, sidebarLinks } from '@/constants'
 import { cn } from '@/lib/utils'
 import { useParams, usePathname } from 'next/navigation'
+import Footer from './Footer'
 
-const Sidebar = ({user }: SiderbarProps) => {
+const Sidebar = ({user}: SiderbarProps) => {
     const pathname=usePathname();
 
   return (
@@ -26,7 +27,7 @@ const Sidebar = ({user }: SiderbarProps) => {
             </Link>
 
             {sidebarLinks.map((item) => {
-                const isActive=pathname === item.route || pathname.startsWith('${item.route}/')
+                const isActive=pathname === item.route || pathname.startsWith(`${item.route}/`)
                 
 
                 return(
@@ -56,9 +57,9 @@ const Sidebar = ({user }: SiderbarProps) => {
             USER
         </nav>
 
-        USER
+        <Footer user={user} />
     </section>
-  )
+)
 }
 
 export default Sidebar
