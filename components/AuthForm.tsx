@@ -24,6 +24,7 @@ import { sign } from 'crypto'
 import SignUp from '@/app/(auth)/sign-up/page'
 import { useRouter } from 'next/navigation'
 import { getLoggedInUser, signIn, signUp } from '@/lib/actions/user.actions'
+import PlaidLink from './PlaidLink'
 
 
 
@@ -53,8 +54,23 @@ const AuthForm = ({type}:{type: string}) => {
         try {
             //Sign up with Appwrite & create plaid token
 
+            
+
             if(type==='sign-up'){
-                const newUser= await signUp(data);
+                const userData={
+                    firstName:data.firstName!,
+                    lastName:data.lastName!,
+                    address1:data.address1!,
+                    city:data.city!,
+                    state:data.state!,
+                    postalCode:data.postalCode!,
+                    dateOfBirth:data.dateOfBirth!,
+                    ssn:data.ssn!,
+                    email:data.email,
+                    password:data.password,
+                }
+                const newUser= await signUp(userData);
+                
 
                 setuser(newUser);
             }
@@ -108,7 +124,9 @@ return (
 
         {user ? (
             <div className='flex flex-col gap-4'>
-                {/* PlaidLink */}
+                {
+                    <PlaidLink user={user} variant="primary"/>
+                }
             </div>
         ): (
             <>
@@ -148,7 +166,7 @@ return (
                                 <CustomInput control={form.control} name='postalCode' label='Postal Code' placeholder='Example: 11101' />
                             </div>
                             
-                            <CustomInput control={form.control} name='adress1' label='Adress' placeholder='Enter your specific adress' />
+                            <CustomInput control={form.control} name='address1' label='Adress' placeholder='Enter your specific adress' />
                             <CustomInput control={form.control} name='city' label='City' placeholder='Enter your city' />
 
 
@@ -189,7 +207,7 @@ return (
                 </footer>
 
             </>
-        )}
+        )} 
     </section>
 )
 }
