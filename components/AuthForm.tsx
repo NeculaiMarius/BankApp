@@ -33,6 +33,7 @@ const AuthForm = ({type}:{type: string}) => {
     const [user, setuser] = useState(null)
     const [isLoading, setIsLoading] = useState(false)
     const router=useRouter();
+    const [invalidCredentials,setinvalidCredentials]=useState(false);
 
     const formSchema=authFormSchema(type);
 
@@ -53,8 +54,6 @@ const AuthForm = ({type}:{type: string}) => {
         
         try {
             //Sign up with Appwrite & create plaid token
-
-            
 
             if(type==='sign-up'){
                 const userData={
@@ -80,13 +79,17 @@ const AuthForm = ({type}:{type: string}) => {
                     password: data.password,
                 })
                 
-                if(response) router.push('/')
+                if(response) {router.push('/');}
+                else{
+                    setinvalidCredentials(true);
+                }
             }
         } catch (error) {
             console.log(error);
             
         } finally{
             setIsLoading(false);
+            setinvalidCredentials(false);
         }
     }
 
@@ -158,27 +161,37 @@ return (
                         {type ==='sign-up' && (
                             <>
                             <div className='flex gap-4'>
-                                <CustomInput control={form.control} name='firstName' label='First Name' placeholder='Enter your first name' />
-                                <CustomInput control={form.control} name='lastName' label='Last Name' placeholder='Enter your last name' />
+                                <CustomInput control={form.control} name='firstName' label='First Name' placeholder='Enter your first name' invalidCredentials={invalidCredentials}/>
+                                <CustomInput control={form.control} name='lastName' label='Last Name' placeholder='Enter your last name' invalidCredentials={invalidCredentials}/>
                             </div>
                             <div className='flex gap-4'>
-                                <CustomInput control={form.control} name='state' label='State' placeholder='Example: NY' />
-                                <CustomInput control={form.control} name='postalCode' label='Postal Code' placeholder='Example: 11101' />
+                                <CustomInput control={form.control} name='state' label='State' placeholder='Example: NY' invalidCredentials={invalidCredentials}/>
+                                <CustomInput control={form.control} name='postalCode' label='Postal Code' placeholder='Example: 11101' invalidCredentials={invalidCredentials}/>
                             </div>
                             
-                            <CustomInput control={form.control} name='address1' label='Adress' placeholder='Enter your specific adress' />
-                            <CustomInput control={form.control} name='city' label='City' placeholder='Enter your city' />
+                            <CustomInput control={form.control} name='address1' label='Adress' placeholder='Enter your specific adress' invalidCredentials={invalidCredentials}/>
+                            <CustomInput control={form.control} name='city' label='City' placeholder='Enter your city' invalidCredentials={invalidCredentials}/>
 
 
                             <div className='flex gap-4'>
-                                <CustomInput control={form.control} name='dateOfBirth' label='Date of birth' placeholder='YYYY-MM-DD' />
-                                <CustomInput control={form.control} name='ssn' label='SSN' placeholder='Example: 1234' />
+                                <CustomInput control={form.control} name='dateOfBirth' label='Date of birth' placeholder='YYYY-MM-DD' invalidCredentials={invalidCredentials}/>
+                                <CustomInput control={form.control} name='ssn' label='SSN' placeholder='Example: 1234' invalidCredentials={invalidCredentials}/>
                             </div>
                             </>
                         )}
 
-                        <CustomInput control={form.control} name='email' label='Email' placeholder='Enter your email' />
-                        <CustomInput control={form.control} name='password' label='Password' placeholder='Enter your password' />
+                        <CustomInput control={form.control} name='email' label='Email' placeholder='Enter your email' invalidCredentials={invalidCredentials}/>
+                        <CustomInput control={form.control} name='password' label='Password' placeholder='Enter your password' invalidCredentials={invalidCredentials} />
+                        
+                        {invalidCredentials? (
+                            <div className='rounded-lg border-[3px] border-red-500 p-1'>
+                            <p className='text-red-500 font-bold w-full text-center'>
+                                {invalidCredentials? 'Invalid credentials' : null}
+                            </p>
+                        </div>
+                        ):null}
+                        
+                        
 
                         <div className='flex flex-col gap-4'>
                             <Button type="submit" className='form-btn' disabled={isLoading}>
