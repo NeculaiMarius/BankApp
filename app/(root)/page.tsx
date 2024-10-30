@@ -7,8 +7,14 @@ import { getLoggedInUser } from "@/lib/actions/user.actions";
 import React from "react"
 
 const Home = async ({searchParams:{id,page}}:SearchParamProps) => {
+
+    
     const currentPage=Number(page as string) || 1;
     const loggedIn= await getLoggedInUser();
+
+    if (!loggedIn) {
+        return; // Sau redirecționează utilizatorul la pagina de login
+    }
     const accounts= await getAccounts({
         userId:loggedIn.$id
     })

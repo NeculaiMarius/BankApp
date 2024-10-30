@@ -15,6 +15,7 @@ import { parseStringify } from "../utils";
 import { getTransactionsByBankId } from "./transaction.action";
 import { getBanks, getBank } from "./user.actions";
 import { plaidClient } from "../plaid";
+import { Concert_One } from "next/font/google";
 
 // Get multiple bank accounts
 export const getAccounts = async ({ userId }: getAccountsProps) => {
@@ -119,6 +120,7 @@ export const getAccount = async ({ appwriteItemId }: getAccountProps) => {
         appwriteItemId: bank.$id,
     };
 
+
     // sort transactions by date such that the most recent transaction is first
     const allTransactions = [...transactions, ...transferTransactions].sort(
         (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()
@@ -184,6 +186,7 @@ export const getTransactions = async ({
 
       hasMore = data.has_more;
     }
+    console.log(transactions)
 
     return parseStringify(transactions);
   } catch (error) {
